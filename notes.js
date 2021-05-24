@@ -1,15 +1,13 @@
 const fs = require('fs');
 const chalk = require('chalk');
 
-const getNotes = function() {
+const getNotes = () => {
     return "Your notes...";
 }
 
-const addNote = function(title, body) {
+const addNote = (title, body) => {
     const notes = loadNotes();
-    const duplicateNotes = notes.filter(function (note) {
-        return note.title === title
-    })
+    const duplicateNotes = notes.filter((note) => note.title === title);
 
     if (duplicateNotes.length === 0) {
         notes.push({
@@ -32,7 +30,7 @@ const addNoteV2 = function(title, body) {
             isUnique = false;
             break;
         }
-    };
+    }
     if (isUnique) {
         notes.push({
             title: title,
@@ -40,16 +38,19 @@ const addNoteV2 = function(title, body) {
         });
         // save to File
         saveNotes(notes);
-        console.log(`New note '${title}' added!`);
+        console.log(chalk.green.inverse(`New note added!`));
+    }
+    else {
+        console.log(chalk.red.inverse(`Note title '${title}' already taken`));
     }
 }
 
-const saveNotes = function(notes) {
+const saveNotes = (notes) => {
     const  dataJSON = JSON.stringify(notes);
     fs.writeFileSync('notes.json', dataJSON);
 }
 
-const loadNotes = function () {
+const loadNotes = () => {
     try {
         const dataBuffer = fs.readFileSync('notes.json');
         const dataJSON = dataBuffer.toString();
@@ -59,10 +60,10 @@ const loadNotes = function () {
     }
 }
 
-const removeNote = function(title) {
+const removeNote = (title) => {
     notes = loadNotes();
     isModified = false;
-    const modNotes = notes.filter(function (note) {
+    const modNotes = notes.filter((note) => {
         if (note.title === title) {
             isModified = true;
         }
@@ -72,7 +73,7 @@ const removeNote = function(title) {
         console.log(chalk.black.bgGreen(`Note removed!`));
         saveNotes(modNotes);    // save to File
     } else {
-        console.log(chalk.bgRed.bold(`No note found!`));
+        console.log(chalk.red.inverse(`No note found!`));
     }
 }
 
