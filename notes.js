@@ -1,4 +1,5 @@
 const fs = require('fs');
+const chalk = require('chalk');
 
 const getNotes = function() {
     return "Your notes...";
@@ -16,9 +17,9 @@ const addNote = function(title, body) {
             body: body
         });
         saveNotes(notes)
-        console.log(`New note added!`);
+        console.log(chalk.green.inverse(`New note added!`));
     } else {
-        console.log(`Note title '${title}' already taken`);
+        console.log(chalk.red.inverse(`Note title '${title}' already taken`));
     }
 }
 
@@ -58,9 +59,27 @@ const loadNotes = function () {
     }
 }
 
+const removeNote = function(title) {
+    notes = loadNotes();
+    isModified = false;
+    const modNotes = notes.filter(function (note) {
+        if (note.title === title) {
+            isModified = true;
+        }
+        return note.title !== title;
+    });
+    if (isModified) {
+        console.log(chalk.black.bgGreen(`Note removed!`));
+        saveNotes(modNotes);    // save to File
+    } else {
+        console.log(chalk.bgRed.bold(`No note found!`));
+    }
+}
+
 module.exports = {
     getNotes: getNotes,
-    addNote: addNote
+    addNote: addNote,
+    removeNote: removeNote
 }
 
 // Sample export only function getNotes
